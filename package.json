@@ -1,0 +1,33 @@
+{
+  "name": "inversify-report-service",
+  "version": "1.0.0",
+  "description": "Serviço HTTP com InversifyJS para geração de relatórios",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "nodemon",
+    "dev:direct": "ts-node src/main.ts",
+    "clean": "rmdir /s /q dist"
+  },
+  "keywords": ["inversify", "typescript", "dependency-injection"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.3.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "inversify": "^6.0.3",
+    "nodemailer": "^6.9.17",
+    "reflect-metadata": "^0.2.2",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.5",
+    "@types/nodemailer": "^6.4.17",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
