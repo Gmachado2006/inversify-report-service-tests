@@ -11,69 +11,25 @@ export class ReportController {
   ) {}
 
  
-  async handle(req: Request, res: Response): Promise<void> {
-    try {
+async handle(req: Request, res: Response) {
+  try {
+    const n = req.query?.n;
+    const email = req.query?.email;
 
-      const n = parseInt(req.params.n);
-      const email = req.query.email as string;
-
-  
-      if (!email) {
-        res.status(400).json({
-          error: 'Bad Request',
-          message: 'O parâmetro "email" é obrigatório na query string'
-        });
-        return;
-      }
-
-      
-      if (!this.isValidEmail(email)) {
-        res.status(400).json({
-          error: 'Bad Request',
-          message: 'Formato de e-mail inválido'
-        });
-        return;
-      }
-
-  
-      if (isNaN(n)) {
-        res.status(400).json({
-          error: 'Bad Request',
-          message: 'O parâmetro "n" deve ser um número válido'
-        });
-        return;
-      }
-
-     
-      await this.reportService.generateAndSend(email, n);
-
-     
-      res.status(200).json({
-        message: 'Relatório gerado e enviado com sucesso',
-        email,
-        records: n
-      });
-
-    } catch (error) {
-      if (error instanceof InvalidReportSizeError) {
-        res.status(400).json({
-          error: 'Bad Request',
-          message: error.message
-        });
-        return;
-      }
-
-      console.error('Erro interno:', error);
-      res.status(500).json({
-        error: 'Internal Server Error',
-        message: 'Ocorreu um erro ao processar sua solicitação'
-      });
+    if (!n || !email) {
+       return res.status(400).json({ error: "Parâmetros ausentes" });
     }
-  }
 
- 
-  private isValidEmail(email: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    await this.reportService.generate(Number(n), String(email));
+    return res.status(200).json({ message: 'OK' });
+    
+  } catch (error: any) {
+    if (error instanceof InvalidReportSizeError || error.name === 'InvalidReportSizeError') {
+      return res.status(400).json({ error: error.message });
+    }
+    
+    console.error("Erro capturado no catch:", error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
+}
 }
